@@ -1,0 +1,36 @@
+{
+  "name": "rsvpswebsite",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "test": "jest ./*test.js --coverage"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "tests/*",
+      "docs/*",
+      "*.log",
+      ".github/*"
+    ],
+    "delay": 2500
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "~1.4.4",
+    "csurf": "^1.11.0",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-rate-limit": "^6.1.0",
+    "http-errors": "~1.6.3",
+    "moment": "^2.29.1",
+    "mongoose": "^6.1.6",
+    "morgan": "~1.9.1",
+    "pug": "^3.0.2",
+    "winston": "^3.4.0"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7",
+    "supertest": "^6.2.1"
+  }
+}

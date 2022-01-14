@@ -1,0 +1,108 @@
+Design:
+    - NodeJS server
+    - TypeScript + JavaScript
+    - React
+    - Integrate Amazon Lex bot
+    - CI\CD - GitHub Actions
+
+Features:
+    - SSO
+        - google
+        - microsoft
+        - facebook
+    - Bot support
+        - add \ edit \ delete info in the events
+    - User management
+        - type - Owner, Viewer, Service Provider, System viewer
+        - name
+        - phone numbers
+    - TODO list
+        - add manual todo
+        - add 
+    - Event management
+        - create events
+            - event type
+            - event name
+            - event date
+        - edit event info
+        - People List
+            - excel \ pdf export
+            - Names
+            - phones
+            - address
+            - Arrival confirmation status
+                - Icons with info popup
+                    - notes
+                    - status
+                        - didnt send a message
+                        - unknown
+                        - not arriving
+                        - arriving
+                            - Number of people
+                            - food type notes
+                                - kosher
+                                - vegan
+                                - vegetarian
+            - Actual arrival
+            - Table number
+            - Gifts
+                - Actual gifts
+                - Money
+            - edit button
+            - delete button
+        - SMS Service
+        - Call Service
+            - By People
+            - By Bot
+        - Table management
+            - excel \ pdf export
+            - view management
+                - list of table with the people names
+                - table drawing with the group name + table number
+            - table features
+                - edit button
+                - delete button
+                - reserve status
+                - table shape
+                - table List
+                - table capacity
+                - table capacity user
+        - Service Provider management
+            - excel \ pdf export
+            - add Providers users
+            - Tax receipt
+            - billing
+            - add manual numbers
+            - add sub contructors
+        - Billing management
+            - excel \ pdf export
+            - sync with current service Providers     
+            - add manual charges
+                - names
+                - numbers
+                - notes
+                - price
+                - already paid amount
+                - tips
+            - edit button
+            - delete button
+        - Landing Page
+            - Event info
+            - Arrival confirmation
+DB:
+    - MongoDB Integration
+    - Users
+    - Events
+
+UI:
+    - React
+    - CSS:
+        - Meterial UI
+
+ChatBot:
+    - Amazon Lex
+
+CI\CD:
+    - GitHub Actions
+        - CI - Done
+        - CD
