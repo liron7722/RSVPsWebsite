@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: CI\CD
 
 # Controls when the workflow will run
 on:
@@ -36,7 +36,7 @@ jobs:
   continuous-deployment:
     runs-on: ubuntu-latest
     needs: [continuous-integration]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/Production'
     steps:
      # Step 1
       - name: Configure AWS credentials
