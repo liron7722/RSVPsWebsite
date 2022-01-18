@@ -6,12 +6,18 @@ var logger = require('morgan');
 var compression = require('compression')
 var rateLimit = require('express-rate-limit')
 var csrf = require('csurf');
+const cors = require("cors");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index.routes');
+var usersRouter = require('./routes/users.routes');
+// require('./routes/auth.routes')(app);
+// require('./routes/user.routes')(app);
 
 var app = express();
 var csrfProtection = csrf({ cookie: true });
+var corsOptions = {
+  origin: "http://localhost:8081"
+};
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,6 +31,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
+app.use(cors(corsOptions));
 app.use(limiter) // Apply the rate limiting middleware to all requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,6 +42,7 @@ app.use(csrfProtection)
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
