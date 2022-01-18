@@ -41,6 +41,7 @@ jobs:
 
   continuous-integration-docker:
     runs-on: ubuntu-latest
+    needs: continuous-integration-testing
     steps:
       -
         name: Checkout
