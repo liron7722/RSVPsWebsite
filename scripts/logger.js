@@ -22,9 +22,9 @@ const logger = createLogger({
     new transports.File({ filename: 'logs/combined.log' }),
   ],
   exceptionHandlers: [
-    new transports.File({ filename: 'logs/exceptions.log' })
+    new transports.File({ filename: 'logs/exceptions.log' }),
   ],
-  exitOnError: false
+  exitOnError: false,
 });
 
 //
