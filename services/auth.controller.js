@@ -1,61 +1,74 @@
-const config = require("../config/auth.config");
-const db = require("../models");
+/* eslint-disable no-param-reassign */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config/auth.config');
+const db = require('../models');
+const logger = require('../scripts/logger');
+const { validateSignIn, validateSignUp } = require('../scripts/validators');
+
+const childLogger = logger.child({ service: 'auth controller' });
 const User = db.user;
 const Role = db.role;
-
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const saltRounds = 10;
+const loginExpriation = 60 * 60 * 24; // 60 (sec) * 60 (min) * 24 (hours) = 24 hours
+const errorLoginMessage = 'Invalid Username or Password';
 
 exports.signup = (req, res) => {
-  const user = new User({
+  if (!validateSignUp(req)) return;
+
+  const userObj = new User({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, saltRounds),
   });
 
-  user.save((err, user) => {
+  userObj.save((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: 'Server error' });
+      childLogger.error(err);
       return;
     }
 
     if (req.body.roles) {
       Role.find(
-        {
-          name: { $in: req.body.roles }
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
+        { name: { $in: req.body.roles } },
+        (findErr, roles) => {
+          if (findErr) {
+            res.status(500).send({ message: 'Server error' });
+            childLogger.error(findErr);
             return;
           }
 
-          user.roles = roles.map(role => role._id);
-          user.save(err => {
-            if (err) {
-              res.status(500).send({ message: err });
+          user.roles = roles.map((role) => role._id);
+          user.save((saveErr) => {
+            if (saveErr) {
+              res.status(500).send({ message: 'Server error' });
+              childLogger.error(saveErr);
               return;
             }
 
-            res.send({ message: "User was registered successfully!" });
+            res.send({ message: 'User was registered successfully!' });
           });
-        }
+        },
       );
     } else {
-      Role.findOne({ name: "user" }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
+      Role.findOne({ name: 'user' }, (findErr, role) => {
+        if (findErr) {
+          res.status(500).send({ message: 'Server error' });
+          childLogger.error(findErr);
           return;
         }
 
         user.roles = [role._id];
-        user.save(err => {
-          if (err) {
-            res.status(500).send({ message: err });
+        user.save((saveErr) => {
+          if (saveErr) {
+            res.status(500).send({ message: 'Server error' });
+            childLogger.error(saveErr);
             return;
           }
 
-          res.send({ message: "User was registered successfully!" });
+          res.send({ message: 'User was registered successfully!' });
         });
       });
     }
@@ -63,47 +76,45 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  if (!validateSignIn(req)) return;
+
   User.findOne({
-    username: req.body.username
+    $or: [{ username: req.body.username }, { email: req.body.username }],
   })
-    .populate("roles", "-__v")
+    .populate('roles', '-__v')
     .exec((err, user) => {
       if (err) {
-        res.status(500).send({ message: err });
+        res.status(500).send({ message: 'Server error' });
+        childLogger.error(err);
         return;
       }
 
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        res.status(401).send({ accessToken: null, message: errorLoginMessage });
+        return;
       }
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
+      const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
       if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
+        res.status(401).send({ accessToken: null, message: errorLoginMessage });
+        return;
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+      const token = jwt.sign({ id: user.id }, config.secret, { expiresIn: loginExpriation });
+
+      const authorities = [];
+
+      user.roles.forEach((role) => {
+        authorities.push(`ROLE_${role.name.toUpperCase()}`);
       });
 
-      var authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-      }
       res.status(200).send({
         id: user._id,
         username: user.username,
         email: user.email,
         roles: authorities,
-        accessToken: token
+        accessToken: token,
       });
     });
 };
