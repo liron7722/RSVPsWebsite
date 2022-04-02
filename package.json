@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest ./*test.js --coverage"
+    "test": "jest ./*test.js --coverage",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "nodemonConfig": {
     "ignore": [
@@ -14,6 +17,15 @@
       ".github/*"
     ],
     "delay": 2500
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier && npm run lint",
+      "pre-push": ""
+    }
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -34,7 +46,12 @@
     "winston": "^3.4.0"
   },
   "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "lint-staged": "^12.3.7",
     "supertest": "^6.2.1"
   }
 }
