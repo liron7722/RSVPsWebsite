@@ -7,7 +7,10 @@
     "test": "jest ./*test.js --coverage",
     "lint": "eslint . --ext .js",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "pre-commit": "npm run prettier && npm run lint",
+    "pre-push": "",
+    "prepare": "husky install"
   },
   "nodemonConfig": {
     "ignore": [
@@ -23,8 +26,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier && npm run lint",
-      "pre-push": ""
+      "pre-commit": "npm run pre-commit",
+      "pre-push": "npm run pre-push"
     }
   },
   "dependencies": {
