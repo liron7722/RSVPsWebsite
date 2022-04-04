@@ -10,7 +10,7 @@ const { validateSignIn, validateSignUp } = require('../scripts/validators');
 const childLogger = logger.child({ service: 'auth controller' });
 const User = db.user;
 const Role = db.role;
-const saltRounds = 10;
+const saltRounds = Math.floor(Math.random() * 10 + 10);
 const loginExpriation = 60 * 60 * 24; // 60 (sec) * 60 (min) * 24 (hours) = 24 hours
 const errorLoginMessage = 'Invalid Username or Password';
 
