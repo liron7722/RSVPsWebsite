@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const morganLogger = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-// const csrf = require('csurf');
+const csrf = require('csurf');
 const cors = require('cors');
 const logger = require('./scripts/logger');
 require('./scripts/mongodb_init');
@@ -14,7 +14,7 @@ const indexRouter = require('./routes/index.routes');
 const usersRouter = require('./routes/users.routes');
 const authsRouter = require('./routes/auth.routes');
 
-// const csrfProtection = csrf({ cookie: true });
+const csrfProtection = csrf({ cookie: true });
 const childLogger = logger.child({ service: 'app' });
 const app = express();
 
@@ -37,6 +37,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(compression());
 app.use(cors({ origin: 'http://localhost:8081' }));
+app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  res.removeHeader('X-Powered-By');
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', [usersRouter, authsRouter]);

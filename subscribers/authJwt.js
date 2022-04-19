@@ -6,6 +6,8 @@ const db = require('../models');
 const User = db.user;
 const Role = db.role;
 
+const findUserError = 'Find user error';
+
 const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
 
@@ -27,7 +29,8 @@ const verifyToken = (req, res, next) => {
 const isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: findUserError });
+      // todo: log error
       return;
     }
 
@@ -37,7 +40,8 @@ const isAdmin = (req, res, next) => {
       },
       (findRoleErr, roles) => {
         if (findRoleErr) {
-          res.status(500).send({ message: findRoleErr });
+          res.status(500).send({ message: findUserError });
+          // todo: log error
           return;
         }
 
@@ -57,7 +61,8 @@ const isAdmin = (req, res, next) => {
 const isModerator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: findUserError });
+      // todo: log error
       return;
     }
 
@@ -67,7 +72,8 @@ const isModerator = (req, res, next) => {
       },
       (findRoleErr, roles) => {
         if (findRoleErr) {
-          res.status(500).send({ message: findRoleErr });
+          res.status(500).send({ message: findUserError });
+          // todo: log error
           return;
         }
 
