@@ -8,6 +8,11 @@ const max = 50;
 const rateLimitMessage = 'You exceeded the amount of requests!';
 const allowedHeaders = true;
 
+router.use((req, res, next) => {
+  res.removeHeader('X-Powered-By');
+  next();
+});
+
 router.use(
   rateLimit({
     windowMs: rateLimitMs,
