@@ -38,6 +38,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(compression());
 app.use(cors({ origin: 'http://localhost:8081' }));
 
+app.use((req, res, next) => {
+  res.removeHeader('X-Powered-By');
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', [usersRouter, authsRouter]);
 
