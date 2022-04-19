@@ -1,6 +1,21 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 
 const router = express.Router();
+
+const rateLimitMs = 1 * 60 * 1000; // 1 minute duration in milliseconds
+const max = 50;
+const rateLimitMessage = 'You exceeded the amount of requests!';
+const allowedHeaders = true;
+
+router.use(
+  rateLimit({
+    windowMs: rateLimitMs,
+    max,
+    message: rateLimitMessage,
+    headers: allowedHeaders,
+  }),
+);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
