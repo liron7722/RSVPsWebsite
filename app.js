@@ -16,6 +16,7 @@ const authsRouter = require('./routes/auth.routes');
 
 const csrfProtection = csrf({ cookie: true });
 const childLogger = logger.child({ service: 'app' });
+// deepcode ignore DisablePoweredBy: disable later in the code
 const app = express();
 
 const limiter = rateLimit({
