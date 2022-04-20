@@ -2,6 +2,7 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const config = require('../config/auth.config');
 const db = require('../models');
 const logger = require('../scripts/logger');
@@ -10,9 +11,19 @@ const { validateSignIn, validateSignUp } = require('../scripts/validators');
 const childLogger = logger.child({ service: 'auth controller' });
 const User = db.user;
 const Role = db.role;
-const saltRounds = Math.floor(Math.random() * 10 + 10);
 const loginExpriation = 60 * 60 * 24; // 60 (sec) * 60 (min) * 24 (hours) = 24 hours
 const errorLoginMessage = 'Invalid Username or Password';
+
+/**
+ * generates random string of characters i.e salt
+ * @function
+ * @param {number} length - Length of the random string.
+ */
+const genRandomString = (length) => crypto.randomBytes(Math.ceil(length / 2))
+  .toString('hex') /** convert to hexadecimal format */
+  .slice(0, length); /** return required number of characters */
+
+const saltRounds = genRandomString(40);
 
 exports.signup = (req, res) => {
   if (!validateSignUp(req)) return;
