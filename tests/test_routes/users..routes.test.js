@@ -20,7 +20,7 @@ const userToken = jwt.sign({ id: 'user' }, config.secret);
 const modToken = jwt.sign({ id: 'mod' }, config.secret);
 const adminToken = jwt.sign({ id: 'admin' }, config.secret);
 
-const invalidToken = jwt.sign({ id: 'user' }, 'badSecret');
+const invalidToken = jwt.sign({ id: 'user' }, config.generateSecret(10));
 
 const requireModMessage = 'Require Moderator Role!';
 const requireAdminMessage = 'Require Admin Role!';

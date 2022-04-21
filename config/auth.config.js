@@ -10,4 +10,5 @@ function generateSecret(length) {
 
 module.exports = {
   secret: process.env.secret || generateSecret(40),
+  generateSecret,
 };

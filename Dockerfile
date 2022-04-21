@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine
+FROM node:gallium-alpine3.15
 
 WORKDIR /RSVPsWebsite
 COPY package.json .
