@@ -7,6 +7,7 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const csrf = require('csurf');
 const cors = require('cors');
+require('pug');
 const logger = require('./scripts/logger');
 require('./scripts/mongodb_init');
 
