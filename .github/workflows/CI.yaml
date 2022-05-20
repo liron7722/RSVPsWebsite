@@ -82,6 +82,8 @@ jobs:
         with:
           default: prerelease
           tag-prefix:  'v'
+          commit-message: 'CI: bumps version to {{version}} [skip ci]'
+          bump-policy: 'ignore'
 
   ci-docker:
     runs-on: ubuntu-latest
